@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="us">
+<head>
+	<meta charset="utf-8">
+	<title>Recruiter Block List</title>
+	<link href="js/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet">
+	<style>
+	body{
+		font-family: "Trebuchet MS", sans-serif;
+		margin: 50px;
+	}
+	.rblHeaders {
+		margin-top: 2em;
+	}
+	#dialog-link {
+		padding: .4em 1em .4em 20px;
+		text-decoration: none;
+		position: relative;
+	}
+	#dialog-link span.ui-icon {
+		margin: 0 5px 0 0;
+		position: absolute;
+		left: .2em;
+		top: 50%;
+		margin-top: -8px;
+	}
+	#icons {
+		margin: 0;
+		padding: 0;
+	}
+	#icons li {
+		margin: 2px;
+		position: relative;
+		padding: 4px 0;
+		cursor: pointer;
+		float: left;
+		list-style: none;
+	}
+	#icons span.ui-icon {
+		float: left;
+		margin: 0 4px;
+	}
+	.fakewindowcontain .ui-widget-overlay {
+		position: absolute;
+	}
+	select {
+		width: 200px;
+	}
+	</style>
+	
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+	
+	<script type="text/javascript">
+		var verifyCallback = function(response) {
+			$( "#usersAddDomainToListBtn" ).prop("disabled", false).removeClass("ui-state-disabled");
+			gRecaptchaResponse = response;
+		};
+		var expiredCallback = function(response) {
+			$( "#usersAddDomainToListBtn" ).prop("disabled", true).addClass("ui-state-disabled");
+			gRecaptchaResponse = null;
+			alert('The reCaptcha expired! Attempt the reCaptcha challenge again to add a recruiter domain!');
+		};
+		var errorCallback = function(response) {
+			$( "#usersAddDomainToListBtn" ).prop("disabled", true).addClass("ui-state-disabled");
+			gRecaptchaResponse = null;
+			alert('reCaptcha Error: ' + JSON.stringify(response, ''));
+		};
+		var onloadCallback = function() {
+			recaptchaWidgetId1 = grecaptcha.render('recaptcha', {
+			  'sitekey' : '6Le21loUAAAAAPq7NYGKLDKfYREAoznlotijitqZ',
+			  'callback' : verifyCallback,
+			  'expired-callback' : expiredCallback,
+			  'error-callback' : errorCallback
+			});
+		};
+    </script>
+</head>
+<body>
+
+<h1>Welcome to the Recruiter Block List!</h1>
+<div class="ui-widget">
+	<p>The recruiter block list is:
+		<ul>
+			<li>a list of blocked recruiters, and</li>
+			<li>an API that can be used to block unwanted recruiters emails in real time!</li>
+		</ul>
+	</p>
+	<p>
+	Stop unwanted emails today and only get the emails you really want to receive!
+	</p>
+</div>
+
+<h2>How to use the list</h2>
+<div class="ui-widget">
+	<p>There are many different ways to use the list or API:
+		<ul>
+			<li>Users can:</li>
+				<ul>
+					<li>download the block list in text, CSV or Gmail XML mail filter format.</li>
+					<li>contribute by adding new recruiter domains to the list.</li>
+				</ul>
+			<li>Developers can:</li>
+				<ul>
+					<li>check if a recruiter's domain is on the block list using the API.</li>
+					<li>get the full block list in JSON, text, CSV or Gmail XML mail filter format using the API.</li>
+					<li>contribute by adding new recruiter domains to the list using the API.</li>
+					<li>build Android/iOS apps that block recruiters in real-time!</li>
+				</ul>
+		</ul>
+	</p>
+</div>
+
+<h2>Applications</h2>
+<div class="ui-widget">
+	<p>
+		<ul>
+			<li>Email blocking in web mail (Gmail, Hotmail, Yahoo, etc.)</li>
+			<li>Email blocking on desktop computers (eg. Windows, Linux, Mac, etc).</li>
+			<li>Email blocking on mobile devices (eg. Android, iOS, Windows, Symbian, etc).</li>
+		</ul>
+	</p>
+</div>
+
+
+
+<!-- Accordion: Examples for Users -->
+<h2 class="rblHeaders">Examples for Users</h2>
+<div id="userExAccordion">
+	<h3>Download the block list !</h3>
+	<div>
+		Download the recruiter block list in one of the following formats:<br>
+		<br>
+		<button id="usersGetListAsTextBtn">Text</button> 
+		<button id="usersGetListAsCsvBtn">CSV</button> 
+		<button id="usersGetListAsXmlBtn">XML (Gmail mail filter format)</button>
+	</div>
+	
+	<h3>Add a recruiter's domain to the block list !</h3>
+	<div>
+		Enter a recruiter's domain: <input id="user_new_domain_fld" name="user_new_domain_fld" type="text" value="ex: oxfordcorp.com"/> <button id="usersAddDomainToListBtn">Add!</button><br>
+		<br>
+		<div id="recaptcha"></div>
+	</div>
+	
+	<h3>Check if a domain is on the block list !</h3>
+	<div>
+		Check if a recruiter's domain is on the recruiter block list.<br>
+		<br>
+		Enter a recruiter's domain: <input id="user_domain_fld" name="user_domain_fld" type="text" value="ex: oxfordcorp.com"/><br>
+		<br>
+		<button id="usersCheckIfInListBtn">Check!</button>
+	</div>
+	
+	
+</div>
+
+<!-- Accordion: Examples for Developers -->
+<h2 class="rblHeaders">Examples for Developers</h2>
+<div id="devExAccordion">
+	<h3>Check if a recruiter's domain is on the list !</h3>
+	<div>
+		Check if a recruiter's domain is on the block list using the <strong>recruiter_domains/is_in_list</strong> api.<br>
+		<br>
+		<strong>Method: </strong>POST<br>
+		<strong>URL: </strong>http://recruiterblocklist/api.php/recruiter_domains/is_in_list<br>
+		<strong>Arguments: </strong><i>domain</i> as string<br>
+		<strong>Response: </strong>JSON: {"success" : [true,false]}<br>
+		<br>
+		Enter a recruiter's domain to try it: <input id="dev_domain_fld" name="dev_domain_fld" type="text" value="ex: oxfordcorp.com"/><br>
+		<br>
+		<button id="devsCheckIfInListBtn">Try it!</button>
+	</div>
+	
+	<h3>Get the block list !</h3>
+	<div>
+		Use our API in your application to get the recruiter block list.<br>
+		<br>
+		<strong>Method: </strong>GET<br>
+		<strong>URL: </strong>http://recruiterblocklist/api.php/<strong>recruiter_domains/get_all_as_[json,text,csv,xml]</strong><br>
+		<strong>Response: </strong>
+			<ul>
+				<li>JSON: {"success" : [true,false]}, or</li>
+				<li>TEXT: 1 domain per line, or</li>
+				<li>CSV: 1 domain per line, comma separated, or</li>
+				<li>XML: Gmail mail filter format.</li>
+			</ul>
+		<br>
+		<button id="devsGetListAsJsonBtn">JSON</button> 
+		<button id="devsGetListAsTextBtn">TEXT</button> 
+		<button id="devsGetListAsCsvBtn">CSV</button> 
+		<button id="devsGetListAsXmlBtn">XML (Gmail mail filter format)</button>	
+	</div>
+</div>
+
+<br>
+
+
+<!-- ui-dialog -->
+<div id="dialog" title="Dialog Title">
+	<p>Dialog text!</p>
+</div>
+
+
+<!-- LIBRARIES -->
+
+<!-- jQuery -->
+<script src="js/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+<script src="js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+<!-- fileDownload -->
+<script src="js\jquery.fileDownload-1.4.6\jquery.fileDownload.js"></script>
+
+<script>
+
+$( "#devExAccordion" ).accordion();
+$( "#userExAccordion" ).accordion();
+
+var gRecaptchaResponse;
+var recaptchaWidgetId1;
+
+<!-- List of recruiter domains for autocomplete -->
+var recruiterDomains = [];
+
+$.getJSON( "api.php/recruiter_domains/get_all_as_json", function( data ) {
+	$.each( data, function( key, val ) {
+		//items.push( "<li id='" + key + "'>" + val + "</li>" );
+		recruiterDomains.push( val.domain );
+	});
+});
+
+<!-- Function: Domain check -->
+function handleDomainCheck(domainStr) {
+	if (domainStr.startsWith("ex:") == true) {
+		domainStr = domainStr.substr(3, domainStr.length-3).trim();
+	}
+	$.post( "api.php/recruiter_domains/is_in_list",
+			{ domain: domainStr },
+			function( data ) {
+				$( '#dialog' ).dialog('option', 'title', 'Result');
+				if (data.success === true) {
+					$( "#dialog" ).text("The recruiter's domain is in the list!");
+				} else {
+					$( "#dialog" ).text("The recruiter's domain is *NOT* in the list!");
+				}
+				$( "#dialog" ).dialog( "open" );
+			},
+			"json"
+	);
+}
+
+<!-- Function: Add new domain -->
+function handleAddNewDomain(newDomainStr, aRecaptchaResponse) {
+	if (aRecaptchaResponse != null) {
+		if (newDomainStr.startsWith("ex:") == true) {
+			newDomainStr = newDomainStr.substr(3, newDomainStr.length-3).trim();
+		}
+		// Send the request to add the new domain.
+		$.post( "api.php/recruiter_domains/add",
+				{ 'domain': newDomainStr, 'g-recaptcha-response': aRecaptchaResponse},
+				function( data ) {
+					$( '#dialog' ).dialog('option', 'title', 'Result');
+					if (data.success === true) {
+						$( "#dialog" ).text(data.result);
+					} else {
+						$( "#dialog" ).text(data.result);
+					}
+					$( "#dialog" ).dialog( "open" );
+				},
+				"json"
+		);
+		// Disable the submit button.
+		$( "#usersAddDomainToListBtn" ).prop("disabled", true).addClass("ui-state-disabled");
+		// Reset the widget.
+		grecaptcha.reset(recaptchaWidgetId1);
+		// Recaptcha response back to null.
+		gRecaptchaResponse = null;
+	}
+}
+
+<!-- Users: Download list -->
+$( "#usersGetListAsTextBtn" ).button();
+$( "#usersGetListAsTextBtn" ).click(function( event ) {
+	$.fileDownload('api.php/recruiter_domains/get_all_as_text', {
+		successCallback: function (url) {
+			alert('You just got a file download dialog or ribbon for this URL :' + url);
+		},
+		failCallback: function (html, url) {
+			alert('Your file download just failed for this URL:' + url + '\r\n' +
+					'Here was the resulting error HTML: \r\n' + html
+					);
+		}
+	});
+});
+
+$( "#usersGetListAsCsvBtn" ).button();
+$( "#usersGetListAsCsvBtn" ).click(function( event ) {
+	$.fileDownload('api.php/recruiter_domains/get_all_as_csv', {
+		successCallback: function (url) {
+			alert('You just got a file download dialog or ribbon for this URL :' + url);
+		},
+		failCallback: function (html, url) {
+			alert('Your file download just failed for this URL:' + url + '\r\n' +
+					'Here was the resulting error HTML: \r\n' + html
+					);
+		}
+	});
+	event.preventDefault();
+});
+
+$( "#usersGetListAsXmlBtn" ).button();
+$( "#usersGetListAsXmlBtn" ).click(function( event ) {
+	$.fileDownload('api.php/recruiter_domains/get_all_as_xml', {
+		successCallback: function (url) {
+			alert('You just got a file download dialog or ribbon for this URL :' + url);
+		},
+		failCallback: function (html, url) {
+			alert('Your file download just failed for this URL:' + url + '\r\n' +
+					'Here was the resulting error HTML: \r\n' + html
+					);
+		}
+	});
+	event.preventDefault();
+});
+
+$( "#user_domain_fld" ).autocomplete({
+	source: recruiterDomains
+}).keypress(function (e) {
+	if (e.which == 13) {
+		var domainStr = $( "#user_domain_fld" ).val();
+		handleDomainCheck(domainStr);
+		return false;
+	}
+});
+
+$( "#usersCheckIfInListBtn" ).button();
+$( "#usersCheckIfInListBtn" ).click(function( event ) {
+	var domainStr = $( "#user_domain_fld" ).val();
+	if (domainStr.startsWith("ex:") == true) {
+		domainStr = domainStr.substr(3, domainStr.length-3).trim();
+	}
+	$.post( "api.php/recruiter_domains/is_in_list",
+			{ domain: domainStr },
+			function( data ) {
+				$( '#dialog' ).dialog('option', 'title', 'Result');
+				if (data.success === true) {
+					$( "#dialog" ).text("The recruiter's domain is in the list!");
+				} else {
+					$( "#dialog" ).text("The recruiter's domain is *NOT* in the list!");
+				}
+				$( "#dialog" ).dialog( "open" );
+			},
+			"json"
+	);
+});
+
+$( "#user_new_domain_fld" ).keypress(function (e) {
+	if (e.which == 13 && gRecaptchaResponse != null) {
+		handleAddNewDomain(
+				$( "#user_new_domain_fld" ).val(),
+				gRecaptchaResponse);
+		return false;
+	}
+});
+
+$( "#usersAddDomainToListBtn" ).button().prop("disabled", true).addClass("ui-state-disabled");
+$( "#usersAddDomainToListBtn" ).click(function( event ) {
+	if (gRecaptchaResponse != null) {
+		handleAddNewDomain(
+				$( "#user_new_domain_fld" ).val(),
+				gRecaptchaResponse);
+	}
+});
+
+
+<!-- Developers: Get list -->
+$( "#devsGetListAsTextBtn" ).button();
+$( "#devsGetListAsTextBtn" ).click(function( event ) {
+	$.fileDownload('api.php/recruiter_domains/get_all_as_text', {
+		successCallback: function (url) {
+			alert('You just got a file download dialog or ribbon for this URL :' + url);
+		},
+		failCallback: function (html, url) {
+			alert('Your file download just failed for this URL:' + url + '\r\n' +
+					'Here was the resulting error HTML: \r\n' + html
+					);
+		}
+	});
+	event.preventDefault();
+});
+
+$( "#devsGetListAsCsvBtn" ).button();
+$( "#devsGetListAsCsvBtn" ).click(function( event ) {
+	$.fileDownload('api.php/recruiter_domains/get_all_as_csv', {
+		successCallback: function (url) {
+			alert('You just got a file download dialog or ribbon for this URL :' + url);
+		},
+		failCallback: function (html, url) {
+			alert('Your file download just failed for this URL:' + url + '\r\n' +
+					'Here was the resulting error HTML: \r\n' + html
+					);
+		}
+	});
+	event.preventDefault();
+});
+
+$( "#devsGetListAsXmlBtn" ).button();
+$( "#devsGetListAsXmlBtn" ).click(function( event ) {
+	$.fileDownload('api.php/recruiter_domains/get_all_as_xml', {
+		successCallback: function (url) {
+			alert('You just got a file download dialog or ribbon for this URL :' + url);
+		},
+		failCallback: function (html, url) {
+			alert('Your file download just failed for this URL:' + url + '\r\n' +
+					'Here was the resulting error HTML: \r\n' + html
+					);
+		}
+	});
+	event.preventDefault();
+});
+
+$( "#devsGetListAsJsonBtn" ).button();
+$( "#devsGetListAsJsonBtn" ).click(function( event ) {
+	$.getJSON( "api.php/recruiter_domains/get_all_as_json", function( data ) {
+		/*var items = [];
+		$.each( data, function( key, val ) {
+			//items.push( "<li id='" + key + "'>" + val + "</li>" );
+			items.push( val.domain );
+		});*/
+		$( '#dialog' ).dialog('option', 'title', 'List in JSON format');
+		$( "#dialog" ).text(JSON.stringify(data, ''));
+		$( "#dialog" ).dialog( "open" );
+	});
+	event.preventDefault();
+	/*$.fileDownload('', {
+		successCallback: function (url) {
+			alert('You just got a file download dialog or ribbon for this URL :' + url);
+		},
+		failCallback: function (html, url) {
+			alert('Your file download just failed for this URL:' + url + '\r\n' +
+					'Here was the resulting error HTML: \r\n' + html
+					);
+		}
+	});
+	event.preventDefault();*/
+});
+
+$( "#dev_domain_fld" ).autocomplete({
+	source: recruiterDomains
+}).keypress(function (e) {
+	if (e.which == 13) {
+		var domainStr = $( "#dev_domain_fld" ).val();
+		handleDomainCheck(domainStr);
+		return false;
+	}
+});
+
+
+$( "#devsCheckIfInListBtn" ).button();
+$( "#devsCheckIfInListBtn" ).click(function( event ) {
+	var domainStr = $( "#dev_domain_fld" ).val();
+	if (domainStr.startsWith("ex:") == true) {
+		domainStr = domainStr.substr(3, domainStr.length-3).trim();
+	}
+	$.post( "api.php/recruiter_domains/is_in_list",
+			{ domain: domainStr },
+			function( data ) {
+				$( '#dialog' ).dialog('option', 'title', 'Result');
+				if (data.success === true) {
+					$( "#dialog" ).text("The recruiter's domain is in the list!");
+				} else {
+					$( "#dialog" ).text("The recruiter's domain is *NOT* in the list!");
+				}
+				$( "#dialog" ).dialog( "open" );
+			},
+			"json"
+	);
+});
+
+
+$( "#getListAsJsonBtn" ).button();
+$( "#getListAsJsonBtn" ).click(function( event ) {
+	$.get( "api.php/recruiter_domains/get_all", function( data ) {
+		$( '#dialog' ).dialog('option', 'title', 'List in JSON format');
+		$( "#dialog" ).text(data);
+		$( "#dialog" ).dialog( "open" );
+		event.preventDefault();
+	});
+});
+
+<!-- user_domain_fld -->
+$( "#user_domain_fld" ).ready(function() {
+	$( "#user_domain_fld" ).css("color", "gray");
+	$( "#user_domain_fld" ).val("ex: oxfordcorp.com");
+});
+
+$( "#user_domain_fld" ).focus(function() {
+	var domainStr = $( "#user_domain_fld" ).val();
+	if (domainStr.startsWith("ex:") == true) {
+		$( "#user_domain_fld" ).val("");
+		$( "#user_domain_fld" ).css("color", "black");
+	}
+});
+
+<!-- user_new_domain_fld -->
+$( "#user_new_domain_fld" ).ready(function() {
+	$( "#user_new_domain_fld" ).css("color", "gray");
+	$( "#user_new_domain_fld" ).val("ex: www.oxfordcorp.com");
+});
+
+$( "#user_new_domain_fld" ).focus(function() {
+	var domainStr = $( "#user_new_domain_fld" ).val();
+	if (domainStr.startsWith("ex:") == true) {
+		$( "#user_new_domain_fld" ).val("");
+		$( "#user_new_domain_fld" ).css("color", "black");
+	}
+});
+
+$( "#dev_domain_fld" ).ready(function() {
+	$( "#dev_domain_fld" ).css("color", "gray");
+	$( "#dev_domain_fld" ).val("ex: oxfordcorp.com");
+});
+
+$( "#dev_domain_fld" ).focus(function() {
+	var domainStr = $( "#dev_domain_fld" ).val();
+	if (domainStr.startsWith("ex:") == true) {
+		$( "#dev_domain_fld" ).val("");
+		$( "#dev_domain_fld" ).css("color", "black");
+	}
+});
+
+
+$( "#button" ).button();
+$( "#button-icon" ).button({
+	icon: "ui-icon-gear",
+	showLabel: false
+});
+
+
+$( "#dialog" ).dialog({
+	autoOpen: false,
+	width: 400,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+
+
+
+</script>
+
+<!-- reCaptcha onLoad script -->
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+    "require": {
+        "slim/slim": "^3.10",
+        "giggsey/libphonenumber-for-php": "^8.9"
+    }
+}
