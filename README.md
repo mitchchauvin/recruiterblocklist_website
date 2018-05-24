@@ -43,11 +43,11 @@ Repo location:
 5. Replace the value of the site key with the public site key you get from Google's reCaptcha website. Then save and close the index.html file.
 
 6. Replace the values defined for the following constants in the <REPO>/config/db_config.php file with your own values.
- - DB_HOST = 'localhost'
- - DB_NAME = 'recruiterblocklist'
- - DB_USER = 'root'
- - DB_PASS = ''
- - RECAPTCHA_PRIVATE_KEY = '<YOUR_RECAPTCHA_SECRET_KEY'
+   - DB_HOST = 'localhost'
+   - DB_NAME = 'recruiterblocklist'
+   - DB_USER = 'root'
+   - DB_PASS = ''
+   - RECAPTCHA_PRIVATE_KEY = '<YOUR_RECAPTCHA_SECRET_KEY'
 
 7. Open your XAMPP application/control panel:
    1. Start your MySQL server by clicking "Start" next to "MySQL" on the XAMPP control panel.
