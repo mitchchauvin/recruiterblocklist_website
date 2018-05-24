@@ -44,7 +44,7 @@ Repo location:
   - DB_NAME = 'recruiterblocklist'
   - DB_USER = 'root'
   - DB_PASS = ''
-  - RECAPTCHA_PRIVATE_KEY = '<SECRET_KEY_FROM_GOOGLE>'
+  - RECAPTCHA_PRIVATE_KEY = '<YOUR_RECAPTCHA_SECRET_KEY'
   
 7. Open your XAMPP application/control panel.
    1. Start your MySQL server by clicking "Start" next to "MySQL" on the XAMPP control panel.
