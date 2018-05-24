@@ -25,7 +25,7 @@ Repo location:
  - Knowledge of JS, JQuery, PHP and some frameworks
  - Google reCaptcha public/private key
  
-### Instructions
+### Instructions for developers
 1. Install XAMPP (or similar) to run/test your Recruiter Block List website changes locally.
  
 2. Check out the git repo of the website into your XAMPP's installation directory, under xampp/htdocs directory.
