@@ -20,10 +20,12 @@ Repo location:
  - https://github.com/mitchchauvin/recruiterblocklist_website
 
 ### Minimum requirements for developers
+The following is a list of requirements needed to run/test the website locally in order to contribute to the website.
  - XAMPP (or similar).
  - Git
- - Knowledge of JS, JQuery, PHP and some frameworks
  - Google reCaptcha public/private key
+ 
+Note: Some knowledge of JS, JQuery, PHP, CSS and frameworks is useful but we know you can pick things up quickly and start contributing in no time!
  
 ### Instructions for developers
 1. Install XAMPP (or similar) to run/test your Recruiter Block List website changes locally.
@@ -37,8 +39,8 @@ Repo location:
  - https://www.google.com/recaptcha
   
 4. Open the recruiter block list website's main index page with a text editor. For example on linux you can use vi, vim, nano, or gedit and on Windows you can use Notepad or Notepad++ to open <REPO>/public/index.html.
- - Linux: Use `gedit <REPO>/public/index.html`
- - Windows: Use Notepad++ to open <REPO>/public/index.html
+   - Linux: Use `gedit <REPO>/public/index.html`
+   - Windows: Use Notepad++ to open <REPO>/public/index.html
   
 5. Replace the value of the site key with the public site key you get from Google's reCaptcha website. Then save and close the index.html file.
 
