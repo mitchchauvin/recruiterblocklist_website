@@ -31,11 +31,12 @@ Repo location:
 2. Check out the git repo of the website into your XAMPP's installation directory, under xampp/htdocs directory.
   `$ git clone https://github.com/mitchchauvin/recruiterblocklist_website.git rbl`
   
-3. Get an reCaptcha public/private key from Google. (Note: Needed for testing. Don't commit these).
+3. Get an reCaptcha public/private key from Google. (Note: Needed for running the website. Don't commit your recaptcha keys).
   - https://www.google.com/recaptcha
   
-4. Open the recruiter block list website's main index page with a text editor and find the "sitekey" for "recaptchaWidgetId1".
-  gedit <REPO>/publix/index.html
+4. Open the recruiter block list website's main index page with a text editor. For example on linux you can use vi, vim, nano, or gedit and on Windows you can use Notepad or Notepad++ to open <REPO>/public/index.html.
+  - Linux: Use `gedit <REPO>/public/index.html`
+  - Windows: Use Notepad++ to open <REPO>/public/index.html
   
 5. Replace the value of the site key with the public site key you get from Google's reCaptcha website. Then save and close the index.html file.
 
@@ -50,10 +51,13 @@ Repo location:
    1. Start your MySQL server by clicking "Start" next to "MySQL" on the XAMPP control panel.
    2. Open the phpMyAdmin panel by clicking "Admin" next to "MySQL" on the XAMPP control panel.
    3. In the phpMyAdmin web page, create a database called "recruiterblocklist".
-  
-8. Add a table called "domains".
+   4. You can leave the user name and password set to the default "root" and "" (blank) for local testing.
+ 
+ 8. While still in phpMyAdmin, add a table called "domains" to the "recruiterblocklist" database.
    1. In table "domains" add columns "id" and "domain".
    2. Set column "id" to INT set to auto increment.
    3. Set colum "domain" to a VARCHAR of size 61.
+   
+ 9. While still in phpMyAdmin, add a table called "recruiter_domain
     
 
