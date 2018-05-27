@@ -1,566 +1,608 @@
 <!doctype html>
-<html lang="us">
-<head>
-	<meta charset="utf-8">
-	<title>Recruiter Block List</title>
-	<link href="js/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet">
-	<style>
-	body{
-		font-family: "Trebuchet MS", sans-serif;
-		margin: 50px;
-	}
-	.rblHeaders {
-		margin-top: 2em;
-	}
-	#dialog-link {
-		padding: .4em 1em .4em 20px;
-		text-decoration: none;
-		position: relative;
-	}
-	#dialog-link span.ui-icon {
-		margin: 0 5px 0 0;
-		position: absolute;
-		left: .2em;
-		top: 50%;
-		margin-top: -8px;
-	}
-	#icons {
-		margin: 0;
-		padding: 0;
-	}
-	#icons li {
-		margin: 2px;
-		position: relative;
-		padding: 4px 0;
-		cursor: pointer;
-		float: left;
-		list-style: none;
-	}
-	#icons span.ui-icon {
-		float: left;
-		margin: 0 4px;
-	}
-	.fakewindowcontain .ui-widget-overlay {
-		position: absolute;
-	}
-	select {
-		width: 200px;
-	}
-	</style>
-	
-	<script src='https://www.google.com/recaptcha/api.js'></script>
-	
-	<script type="text/javascript">
-		var verifyCallback = function(response) {
-			$( "#usersAddDomainToListBtn" ).prop("disabled", false).removeClass("ui-state-disabled");
-			gRecaptchaResponse = response;
-		};
-		var expiredCallback = function(response) {
-			$( "#usersAddDomainToListBtn" ).prop("disabled", true).addClass("ui-state-disabled");
-			gRecaptchaResponse = null;
-			alert('The reCaptcha expired! Attempt the reCaptcha challenge again to add a recruiter domain!');
-		};
-		var errorCallback = function(response) {
-			$( "#usersAddDomainToListBtn" ).prop("disabled", true).addClass("ui-state-disabled");
-			gRecaptchaResponse = null;
-			alert('reCaptcha Error: ' + JSON.stringify(response, ''));
-		};
-		var onloadCallback = function() {
-			recaptchaWidgetId1 = grecaptcha.render('recaptcha', {
-			  'sitekey' : '6Le21loUAAAAAPq7NYGKLDKfYREAoznlotijitqZ',
-			  'callback' : verifyCallback,
-			  'expired-callback' : expiredCallback,
-			  'error-callback' : errorCallback
-			});
-		};
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <link rel="icon" href="favicon.ico">
+
+    <title>Recruiter Block List</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="external/bootstrap-4.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="carousel.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="external/intl-tel-input-12.1.0/build/css/intlTelInput.css">
+    <!-- Override the path to flags.png for intl-tel-input -->
+    <style>
+    .iti-flag {background-image: url("external/intl-tel-input-12.1.0/build/img/flags.png");}
+    
+    @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+  .iti-flag {background-image: url("path/to/flags@2x.png");}
+}
+    </style>
+    
+    <!-- Google ReCaptcha -->
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    
+    <script type="text/javascript">
+      var gRecaptchaResponse = null;
+      var debug = false;
+      
+      var verifyCallback = function(response) {
+        gRecaptchaResponse = response;
+        $( "#recaptchaValidator" ).val("" + response);
+        $( "#submitRecInfoBtn" ).prop("disabled", false).removeClass("ui-state-disabled");
+      };
+      var expiredCallback = function(response) {
+        gRecaptchaResponse = null;
+        $( "#recaptchaValidator" ).val("");
+        $( "#submitRecInfoBtn" ).prop("disabled", true).addClass("ui-state-disabled");
+        alert('The reCaptcha expired! Attempt the reCaptcha challenge again to add a recruiter domain!');
+      };
+      var errorCallback = function(response) {
+        gRecaptchaResponse = null;
+        $( "#recaptchaValidator" ).val("");
+        $( "#submitRecInfoBtn" ).prop("disabled", true).addClass("ui-state-disabled");
+        alert('reCaptcha Error: ' + JSON.stringify(response, ''));
+      };
+      var onloadCallback = function() {
+        recaptchaWidgetId1 = grecaptcha.render('recaptcha', {
+          'sitekey' : '6Le21loUAAAAAPq7NYGKLDKfYREAoznlotijitqZ',
+          'callback' : verifyCallback,
+          'expired-callback' : expiredCallback,
+          'error-callback' : errorCallback
+        });
+      };
     </script>
-</head>
-<body>
+    
+  </head>
+  
+  <body>
 
-<h1>Welcome to the Recruiter Block List!</h1>
-<div class="ui-widget">
-	<p>The recruiter block list is:
-		<ul>
-			<li>a list of blocked recruiters, and</li>
-			<li>an API that can be used to block unwanted recruiters emails in real time!</li>
-		</ul>
-	</p>
-	<p>
-	Stop unwanted emails today and only get the emails you really want to receive!
-	</p>
-</div>
+    <header>
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#">Recruiter Block List</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#lists">Lists</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#apps">Apps</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contribute">Contribute</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="developers.html">Developers</a>
+            </li>
+          </ul>
+          <!--
+          <form class="form-inline mt-2 mt-md-0">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Sign in</button>
+			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Create Account</button>
+          </form>
+          -->
+        </div>
+      </nav>
+    </header>
 
-<h2>How to use the list</h2>
-<div class="ui-widget">
-	<p>There are many different ways to use the list or API:
-		<ul>
-			<li>Users can:</li>
-				<ul>
-					<li>download the block list in text, CSV or Gmail XML mail filter format.</li>
-					<li>contribute by adding new recruiter domains to the list.</li>
-				</ul>
-			<li>Developers can:</li>
-				<ul>
-					<li>check if a recruiter's domain is on the block list using the API.</li>
-					<li>get the full block list in JSON, text, CSV or Gmail XML mail filter format using the API.</li>
-					<li>contribute by adding new recruiter domains to the list using the API.</li>
-					<li>build Android/iOS apps that block recruiters in real-time!</li>
-				</ul>
-		</ul>
-	</p>
-</div>
+    <main role="main">
 
-<h2>Applications</h2>
-<div class="ui-widget">
-	<p>
-		<ul>
-			<li>Email blocking in web mail (Gmail, Hotmail, Yahoo, etc.)</li>
-			<li>Email blocking on desktop computers (eg. Windows, Linux, Mac, etc).</li>
-			<li>Email blocking on mobile devices (eg. Android, iOS, Windows, Symbian, etc).</li>
-		</ul>
-	</p>
-</div>
-
-
-
-<!-- Accordion: Examples for Users -->
-<h2 class="rblHeaders">Examples for Users</h2>
-<div id="userExAccordion">
-	<h3>Download the block list !</h3>
-	<div>
-		Download the recruiter block list in one of the following formats:<br>
-		<br>
-		<button id="usersGetListAsTextBtn">Text</button> 
-		<button id="usersGetListAsCsvBtn">CSV</button> 
-		<button id="usersGetListAsXmlBtn">XML (Gmail mail filter format)</button>
-	</div>
-	
-	<h3>Add a recruiter's domain to the block list !</h3>
-	<div>
-		Enter a recruiter's domain: <input id="user_new_domain_fld" name="user_new_domain_fld" type="text" value="ex: oxfordcorp.com"/> <button id="usersAddDomainToListBtn">Add!</button><br>
-		<br>
-		<div id="recaptcha"></div>
-	</div>
-	
-	<h3>Check if a domain is on the block list !</h3>
-	<div>
-		Check if a recruiter's domain is on the recruiter block list.<br>
-		<br>
-		Enter a recruiter's domain: <input id="user_domain_fld" name="user_domain_fld" type="text" value="ex: oxfordcorp.com"/><br>
-		<br>
-		<button id="usersCheckIfInListBtn">Check!</button>
-	</div>
-	
-	
-</div>
-
-<!-- Accordion: Examples for Developers -->
-<h2 class="rblHeaders">Examples for Developers</h2>
-<div id="devExAccordion">
-	<h3>Check if a recruiter's domain is on the list !</h3>
-	<div>
-		Check if a recruiter's domain is on the block list using the <strong>recruiter_domains/is_in_list</strong> api.<br>
-		<br>
-		<strong>Method: </strong>POST<br>
-		<strong>URL: </strong>http://recruiterblocklist/api.php/recruiter_domains/is_in_list<br>
-		<strong>Arguments: </strong><i>domain</i> as string<br>
-		<strong>Response: </strong>JSON: {"success" : [true,false]}<br>
-		<br>
-		Enter a recruiter's domain to try it: <input id="dev_domain_fld" name="dev_domain_fld" type="text" value="ex: oxfordcorp.com"/><br>
-		<br>
-		<button id="devsCheckIfInListBtn">Try it!</button>
-	</div>
-	
-	<h3>Get the block list !</h3>
-	<div>
-		Use our API in your application to get the recruiter block list.<br>
-		<br>
-		<strong>Method: </strong>GET<br>
-		<strong>URL: </strong>http://recruiterblocklist/api.php/<strong>recruiter_domains/get_all_as_[json,text,csv,xml]</strong><br>
-		<strong>Response: </strong>
-			<ul>
-				<li>JSON: {"success" : [true,false]}, or</li>
-				<li>TEXT: 1 domain per line, or</li>
-				<li>CSV: 1 domain per line, comma separated, or</li>
-				<li>XML: Gmail mail filter format.</li>
-			</ul>
-		<br>
-		<button id="devsGetListAsJsonBtn">JSON</button> 
-		<button id="devsGetListAsTextBtn">TEXT</button> 
-		<button id="devsGetListAsCsvBtn">CSV</button> 
-		<button id="devsGetListAsXmlBtn">XML (Gmail mail filter format)</button>	
-	</div>
-</div>
-
-<br>
+      <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="1"></li>
+          <li data-target="#myCarousel" data-slide-to="2"></li>
+          <li data-target="#myCarousel" data-slide-to="3"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img class="first-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="First slide">
+            <div class="container">
+              <div class="carousel-caption text-left">
+                <h1>Download the recruiter block list!</h1>
+                <p>Download the recruiter block list in text, CSV or Gmail XML mail filter format.</p>
+                <p><a class="btn btn-lg btn-primary" href="#lists" role="button">Downloads for users</a></p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img class="second-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Second slide">
+            <div class="container">
+              <div class="carousel-caption">
+                <h1>Download the app!</h1>
+                <p>Download the app! Block unwanted recruiter and get only the email and calls you really want!</p>
+                <p><a class="btn btn-lg btn-primary" href="#apps" role="button">Download the app! (soon!)</a></p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="carousel-item">
+            <img class="second-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Second slide">
+            <div class="container">
+              <div class="carousel-caption">
+                <h1>Contribute!</h1>
+                <p>Give back by helping us improve the recruiter block list! Click to add a recruiter!</p>
+                <p><a class="btn btn-lg btn-primary" href="#contribute" role="button">Add a recruiter</a></p>
+              </div>
+            </div>
+          </div>
+          
+		  <div class="carousel-item">
+            <img class="third-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Third slide">
+            <div class="container">
+              <div class="carousel-caption text-right">
+                <h1>API for developers.</h1>
+                <p>Use the recruiter block list web API with your software, website or Android/iOS app or check out our website code and help us build a better API or website! We're open source!</p>
+                <p><a class="btn btn-lg btn-primary" href="developers.html" role="button">Developers</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
 
 
-<!-- ui-dialog -->
-<div id="dialog" title="Dialog Title">
-	<p>Dialog text!</p>
-</div>
+      <!-- Marketing messaging and featurettes
+      ================================================== -->
+      <!-- Wrap the rest of the page in another container to center all the content. -->
 
+      <div class="container marketing">	  
+	  
+	  
+        <!-- START THE FEATURETTES -->
 
-<!-- LIBRARIES -->
+        <hr class="featurette-divider">
 
-<!-- jQuery -->
-<script src="js/jquery-3.3.1/jquery-3.3.1.min.js"></script>
-<script src="js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
-<!-- fileDownload -->
-<script src="js\jquery.fileDownload-1.4.6\jquery.fileDownload.js"></script>
+        <div class="row featurette">
+          <div class="col-md-100" name="lists">
+            <h2 class="featurette-heading">Download the recruiter block list!</h2>
+            <p class="lead">Download the recruiter block list in text, CSV or Gmail XML mail filter format. Then import the block list into your email client spam filter.</p>
+			<p class="lead">
+			<a class="btn btn-lg btn-primary" id="usersGetListAsTextBtn" href="#lists" role="button">Text</a>
+			<a class="btn btn-lg btn-primary" id="usersGetListAsCsvBtn" href="#lists" role="button">CSV</a>
+			<a class="btn btn-lg btn-primary" id="usersGetListAsXmlBtn" href="#lists" role="button">XML (Gmail mail filter format)</a>
+			</p>
+          </div>
+        </div>
 
-<script>
+    <hr class="featurette-divider">
 
-$( "#devExAccordion" ).accordion();
-$( "#userExAccordion" ).accordion();
+		<div class="row featurette">
+      <div class="col-md-100" name="apps">
+        <h2 class="featurette-heading">Download the app! <span class="text-muted"> Block unwanted emails/calls on your mobile device!</span></h2>
+        <p class="lead">Download the app and block recruiters. The apps updates periodically to keep unwanted recruiter emails/calls interfering with you work day! Just download our app, let it do its job and regain your sanity!</p>
+          <p class="lead">
+          <a class="btn btn-lg btn-primary" id="usersGetAndroidApp" href="#apps" role="button">Android (soon!)</a>
+          <a class="btn btn-lg btn-primary" id="usersGetIphonaApp" href="#apps" role="button">iPhone (soon!)</a>
+        </p>
+      </div>
+    </div>
+		
+		<hr class="featurette-divider">
+		
+    <div class="row featurette">
+      <div class="col-md-100" name="contribute">
+        <h2 class="featurette-heading">Contribute! <span class="text-muted"> Help us by adding a recruiter!</span></h2>
+        <p class="lead">Add a recruiter to the list and help us keep the list up-to-date. New recruiters are poping up every day and some try all kinds of tactics to get through your spam filters. Our recruiter block list is improved/maintained by people like you! Add a recruiter and make the list better for everyone!</p>
+      </div>
+    </div>
 
-var gRecaptchaResponse;
-var recaptchaWidgetId1;
+		<div class="row">
+        <div class="col-md-100">
+          <h4 class="mb-3">Required information</h4>
+          <form class="needs-validation" novalidate="" action="api.php/recruiters/add" method="post" onsubmit="return false;">
+            
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="firstName">First name (required)</label>
+                <input class="form-control" id="firstName" name="firstName" required="" type="text" placeholder="" value="">
+                <div class="invalid-feedback">
+                  The recruiter's first name is required.
+                </div>
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="lastName">Last name (required)</label>
+                <input class="form-control" id="lastName" name="lastName" required="" type="text" placeholder="" value="">
+                <div class="invalid-feedback">
+                  The recruiter's last name is required.
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="email">Email <span class="text-muted">(required)</span></label>
+                <input class="form-control" id="email" name="email" type="email" placeholder="recruiter@domain.com" required="">
+                <div class="invalid-feedback">
+                  Please enter a valid email address.
+                </div>
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="phone">Phone <span class="text-muted">(required)</span></label>
+                <input class="form-control" id="phone" name="phone" type="tel" placeholder="" required="">
+                <div class="invalid-feedback">
+                  Please enter a valid phone number.
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="firstName">Company (required)</label>
+                <input class="form-control" id="company" name="company" required="" type="text" placeholder="" value="">
+                <div class="invalid-feedback">
+                  Please enter the recruiter's company name.
+                </div>
+              </div>
+            </div>
 
-<!-- List of recruiter domains for autocomplete -->
-var recruiterDomains = [];
+            <h5 class="mb-3">Optional</h5>
+            <div class="row">
+              <div class="col-md-7 mb-3">
+                <label for="address">Address</label>
+                <input class="form-control" id="address" name="address" type="text" placeholder="">
+                <div class="invalid-feedback">
+                  Please enter a valid address.
+                </div>
+              </div>
+              
+              <div class="col-md-5 mb-3">
+                <label for="city">City</label>
+                <input class="form-control" id="city" name="city" type="text" placeholder="">
+                <div class="invalid-feedback">
+                  Please provide a valid city.
+                </div>
+              </div>
+            </div>
 
-$.getJSON( "api.php/recruiter_domains/get_all_as_json", function( data ) {
-	$.each( data, function( key, val ) {
-		//items.push( "<li id='" + key + "'>" + val + "</li>" );
-		recruiterDomains.push( val.domain );
-	});
-});
+            <div class="row">
+              <div class="col-md-5 mb-3">
+                <label for="country">Country (required)</label>
+                <select class="custom-select d-block w-100" id="country" name="country" required="">
+                  <option value="">Choose...</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please select a valid country.
+                </div>
+              </div>
+              
+              <div class="col-md-4 mb-3">
+                <label for="state">State</label>
+                <select class="custom-select d-block w-100" id="state" name="state">
+                  <option value="">Choose...</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please provide a valid state.
+                </div>
+              </div>
+              
+              <div class="col-md-3 mb-3">
+                <label for="zip">Zip / Postal Code</label>
+                <input class="form-control" id="zip" name="zip" type="text" placeholder="">
+                <div class="invalid-feedback">
+                  Please enter a zip code or postal code.
+                </div>
+              </div>
+            </div>
+            
+            <hr class="mb-4">
+            
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <div id="recaptcha"></div>
+                <input class="form-control" id="recaptchaValidator" name="g-recaptcha-response" type="text" placeholder="" required="">
+                <div class="invalid-feedback" id="recaptachaInvalidFeedback">
+                  Please solve the recaptcha to prove you are not a bot!
+                </div>
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                 <button id="submitRecInfoBtn" class="btn btn-primary btn-lg btn-block" type="">Submit recruiter</button>
+              </div>
+            </div>
+          
+          </form>
+        
+        </div>
+	  
+      </div>
+      <!-- /END THE FEATURETTES -->
 
-<!-- Function: Domain check -->
-function handleDomainCheck(domainStr) {
-	if (domainStr.startsWith("ex:") == true) {
-		domainStr = domainStr.substr(3, domainStr.length-3).trim();
-	}
-	$.post( "api.php/recruiter_domains/is_in_list",
-			{ domain: domainStr },
-			function( data ) {
-				$( '#dialog' ).dialog('option', 'title', 'Result');
-				if (data.success === true) {
-					$( "#dialog" ).text("The recruiter's domain is in the list!");
-				} else {
-					$( "#dialog" ).text("The recruiter's domain is *NOT* in the list!");
-				}
-				$( "#dialog" ).dialog( "open" );
-			},
-			"json"
-	);
-}
+      </div><!-- /.container -->
 
-<!-- Function: Add new domain -->
-function handleAddNewDomain(newDomainStr, aRecaptchaResponse) {
-	if (aRecaptchaResponse != null) {
-		if (newDomainStr.startsWith("ex:") == true) {
-			newDomainStr = newDomainStr.substr(3, newDomainStr.length-3).trim();
-		}
-		// Send the request to add the new domain.
-		$.post( "api.php/recruiter_domains/add",
-				{ 'domain': newDomainStr, 'g-recaptcha-response': aRecaptchaResponse},
-				function( data ) {
-					$( '#dialog' ).dialog('option', 'title', 'Result');
-					if (data.success === true) {
-						$( "#dialog" ).text(data.result);
-					} else {
-						$( "#dialog" ).text(data.result);
-					}
-					$( "#dialog" ).dialog( "open" );
-				},
-				"json"
-		);
-		// Disable the submit button.
-		$( "#usersAddDomainToListBtn" ).prop("disabled", true).addClass("ui-state-disabled");
-		// Reset the widget.
-		grecaptcha.reset(recaptchaWidgetId1);
-		// Recaptcha response back to null.
-		gRecaptchaResponse = null;
-	}
-}
+      <!-- FOOTER -->
+      <footer class="container">
+        <p class="float-right"><a href="#">Back to top</a></p>
+        <p>&copy; 2018 Recruiter Block List Project <!-- &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p> -->
+      </footer>
+    </main>
 
-<!-- Users: Download list -->
-$( "#usersGetListAsTextBtn" ).button();
-$( "#usersGetListAsTextBtn" ).click(function( event ) {
-	$.fileDownload('api.php/recruiter_domains/get_all_as_text', {
-		successCallback: function (url) {
-			alert('You just got a file download dialog or ribbon for this URL :' + url);
-		},
-		failCallback: function (html, url) {
-			alert('Your file download just failed for this URL:' + url + '\r\n' +
-					'Here was the resulting error HTML: \r\n' + html
-					);
-		}
-	});
-});
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="external/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    
+    <script>window.jQuery || document.write('<script src="external/bootstrap-4.1.1/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="external/bootstrap-4.1.1/assets/js/vendor/popper.min.js"></script>
+    <script src="external/bootstrap-4.1.1/dist/js/bootstrap.min.js"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="external/bootstrap-4.1.1/assets/js/vendor/holder.min.js"></script>
+    
+    <!-- jQuery fileDownload -->
+    <script src="external/jquery.fileDownload-1.4.6/jquery.fileDownload.js"></script>
+    
+    <!-- jQuery Validate -->
+    <!-- <script src="external/jquery-validation-1.17.0/dist/jquery.validate.min.js"></script> -->
+    
+    <!-- International phone number -->
+    <script src="external\intl-tel-input-12.1.0\build\js\intlTelInput.min.js"></script>
+    
+    <!-- Validation of the Bootstrap form -->
+    <script>
+      <!-- Hide the field used to validate the form for the recaptcha -->
+      $( "#recaptchaValidator" ).hide();
+      if (debug != true) {
+        $( "#recaptchaValidator" ).val("");
+        $( "#submitRecInfoBtn" ).prop("disabled", true).addClass("ui-state-disabled");
+      } else {
+        $( "#recaptchaValidator" ).val("true");
+      }
+      
+      // Example starter JavaScript for disabling form submissions if there are invalid fields
+      (function() {
+        'use strict';
 
-$( "#usersGetListAsCsvBtn" ).button();
-$( "#usersGetListAsCsvBtn" ).click(function( event ) {
-	$.fileDownload('api.php/recruiter_domains/get_all_as_csv', {
-		successCallback: function (url) {
-			alert('You just got a file download dialog or ribbon for this URL :' + url);
-		},
-		failCallback: function (html, url) {
-			alert('Your file download just failed for this URL:' + url + '\r\n' +
-					'Here was the resulting error HTML: \r\n' + html
-					);
-		}
-	});
-	event.preventDefault();
-});
+        window.addEventListener('load', function() {
+          // Fetch all the forms we want to apply custom Bootstrap validation styles to
+          var forms = document.getElementsByClassName('needs-validation');
+          
+          // Loop over them and prevent submission
+          var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+              } else {
+                handleAddNewRecruiter();
+              }
+              form.classList.add('was-validated');
+            }, false);
+          });
+        }, false);
+      })();
+      
+      function handleAddNewRecruiter() {
+        if (gRecaptchaResponse != null || debug == true) {
+          // Disable the submit button.
+          if (debug != true) {
+            $( "#submitRecInfoBtn" ).prop("disabled", true).addClass("ui-state-disabled");
+          }
+          
+          // Elements.
+          var phoneElem = $( "#phone" );
+          
+          // Get values from recruiter info fields.
+          var firstNameStr = $( "#firstName" ).val().trim();
+          var lastNameStr = $( "#lastName" ).val().trim();
+          var emailStr = $( "#email" ).val().trim();
+          
+          // Validate and get phone number.
+          if (phoneElem.intlTelInput('isValidNumber') == false) {
+            var err = $( "phone" ).intlTelInput('getValidationError');
+            switch (err) {
+                case intlTelInputUtils.validationError.INVALID_COUNTRY_CODE:
+                    message = 'The country code is not valid';
+                    break;
+                    
+                case intlTelInputUtils.validationError.TOO_SHORT:
+                    message = 'The phone number is too short';
+                    break;
 
-$( "#usersGetListAsXmlBtn" ).button();
-$( "#usersGetListAsXmlBtn" ).click(function( event ) {
-	$.fileDownload('api.php/recruiter_domains/get_all_as_xml', {
-		successCallback: function (url) {
-			alert('You just got a file download dialog or ribbon for this URL :' + url);
-		},
-		failCallback: function (html, url) {
-			alert('Your file download just failed for this URL:' + url + '\r\n' +
-					'Here was the resulting error HTML: \r\n' + html
-					);
-		}
-	});
-	event.preventDefault();
-});
+                case intlTelInputUtils.validationError.TOO_LONG:
+                    message = 'The phone number is too long';
+                    break;
 
-$( "#user_domain_fld" ).autocomplete({
-	source: recruiterDomains
-}).keypress(function (e) {
-	if (e.which == 13) {
-		var domainStr = $( "#user_domain_fld" ).val();
-		handleDomainCheck(domainStr);
-		return false;
-	}
-});
+                case intlTelInputUtils.validationError.NOT_A_NUMBER:
+                    message = 'The value is not a number';
+                    break;
 
-$( "#usersCheckIfInListBtn" ).button();
-$( "#usersCheckIfInListBtn" ).click(function( event ) {
-	var domainStr = $( "#user_domain_fld" ).val();
-	if (domainStr.startsWith("ex:") == true) {
-		domainStr = domainStr.substr(3, domainStr.length-3).trim();
-	}
-	$.post( "api.php/recruiter_domains/is_in_list",
-			{ domain: domainStr },
-			function( data ) {
-				$( '#dialog' ).dialog('option', 'title', 'Result');
-				if (data.success === true) {
-					$( "#dialog" ).text("The recruiter's domain is in the list!");
-				} else {
-					$( "#dialog" ).text("The recruiter's domain is *NOT* in the list!");
-				}
-				$( "#dialog" ).dialog( "open" );
-			},
-			"json"
-	);
-});
+                default:
+                    message = 'The phone number is not valid';
+                    break;
+            }
+            if (gRecaptchaResponse != null) {
+              $( "#submitRecInfoBtn" ).prop("disabled", false).removeClass("ui-state-disabled");
+            }
+            alert(message);
+            return;
+          }
+          var phoneStr = phoneElem.intlTelInput("getNumber", intlTelInputUtils.numberFormat.E164);
+          
+          var companyStr = $( "#company" ).val().trim();
+          
+          var addrStr = $( "#address" ).val().trim();
+          var cityStr = $( "#city" ).val().trim();
+          var stateCodeStr = $( "#state" ).val().trim();
+          var countryCodeStr = $( "#country" ).val().trim();
+          var zipStr = $( "#zip" ).val().trim();
+          
+          // Send a POST request to add the new domain.
+          $.post( "api.php/recruiters/add",
+              {
+                'g-recaptcha-response': gRecaptchaResponse,
+                'firstName': firstNameStr,
+                'lastName': lastNameStr,
+                'email': emailStr,
+                'phone': phoneStr,
+                'company': companyStr,
+                'address': addrStr,
+                'city': cityStr,
+                'stateCodeStr': stateCodeStr,
+                'countryCode': countryCodeStr,
+                'zip': zipStr
+              },
+              function( data ) {
+                if (data.success === true) {
+                  $( "#firstName" ).val("");
+                  $( "#lastName" ).val("");
+                  $( "#email" ).val("");
+                  $( "#phone" ).val("");
+                  $( "#company" ).val("");
+                  $( "#address" ).val("");
+                  $( "#city" ).val("");
+                  $( "#state" ).val("");
+                  $( "#country" ).val("");
+                  $( "#zip" ).val("");
+                  //$( "#recaptchaValidator" ).val("");
+                  alert(data.result);
+                } else {
+                  if (debug == true) {
+                    alert(JSON.stringify(data, ''));
+                  } else {
+                    alert(data.result);
+                  }
+                }
+              },
+              "json"
+          );
+          
+          // Reset the widget.
+          grecaptcha.reset(recaptchaWidgetId1);
+          // Recaptcha response back to null.
+          gRecaptchaResponse = null;
+        }
+      }
+    </script>
+    
+    <script>
+      $("#phone").intlTelInput({
+        utilsScript: "external/intl-tel-input-12.1.0/build/js/utils.js"
+      });
+    </script>
+    
+    <!-- User download buttons -->
+    <script>
+      $( "#usersGetListAsTextBtn" ).click(function( event ) {
+        $.fileDownload('api.php/recruiter_domains/get_all_as_text', {
+          successCallback: function (url) {
+            alert('You just got a file download dialog or ribbon for this URL :' + url);
+          },
+          failCallback: function (html, url) {
+            alert('Your file download just failed for this URL:' + url + '\r\n' +
+                'Here was the resulting error HTML: \r\n' + html
+                );
+          }
+        });
+      });
 
-$( "#user_new_domain_fld" ).keypress(function (e) {
-	if (e.which == 13 && gRecaptchaResponse != null) {
-		handleAddNewDomain(
-				$( "#user_new_domain_fld" ).val(),
-				gRecaptchaResponse);
-		return false;
-	}
-});
+      $( "#usersGetListAsCsvBtn" ).button();
+      $( "#usersGetListAsCsvBtn" ).click(function( event ) {
+        $.fileDownload('api.php/recruiter_domains/get_all_as_csv', {
+          successCallback: function (url) {
+            alert('You just got a file download dialog or ribbon for this URL :' + url);
+          },
+          failCallback: function (html, url) {
+            alert('Your file download just failed for this URL:' + url + '\r\n' +
+                'Here was the resulting error HTML: \r\n' + html
+                );
+          }
+        });
+        event.preventDefault();
+      });
 
-$( "#usersAddDomainToListBtn" ).button().prop("disabled", true).addClass("ui-state-disabled");
-$( "#usersAddDomainToListBtn" ).click(function( event ) {
-	if (gRecaptchaResponse != null) {
-		handleAddNewDomain(
-				$( "#user_new_domain_fld" ).val(),
-				gRecaptchaResponse);
-	}
-});
-
-
-<!-- Developers: Get list -->
-$( "#devsGetListAsTextBtn" ).button();
-$( "#devsGetListAsTextBtn" ).click(function( event ) {
-	$.fileDownload('api.php/recruiter_domains/get_all_as_text', {
-		successCallback: function (url) {
-			alert('You just got a file download dialog or ribbon for this URL :' + url);
-		},
-		failCallback: function (html, url) {
-			alert('Your file download just failed for this URL:' + url + '\r\n' +
-					'Here was the resulting error HTML: \r\n' + html
-					);
-		}
-	});
-	event.preventDefault();
-});
-
-$( "#devsGetListAsCsvBtn" ).button();
-$( "#devsGetListAsCsvBtn" ).click(function( event ) {
-	$.fileDownload('api.php/recruiter_domains/get_all_as_csv', {
-		successCallback: function (url) {
-			alert('You just got a file download dialog or ribbon for this URL :' + url);
-		},
-		failCallback: function (html, url) {
-			alert('Your file download just failed for this URL:' + url + '\r\n' +
-					'Here was the resulting error HTML: \r\n' + html
-					);
-		}
-	});
-	event.preventDefault();
-});
-
-$( "#devsGetListAsXmlBtn" ).button();
-$( "#devsGetListAsXmlBtn" ).click(function( event ) {
-	$.fileDownload('api.php/recruiter_domains/get_all_as_xml', {
-		successCallback: function (url) {
-			alert('You just got a file download dialog or ribbon for this URL :' + url);
-		},
-		failCallback: function (html, url) {
-			alert('Your file download just failed for this URL:' + url + '\r\n' +
-					'Here was the resulting error HTML: \r\n' + html
-					);
-		}
-	});
-	event.preventDefault();
-});
-
-$( "#devsGetListAsJsonBtn" ).button();
-$( "#devsGetListAsJsonBtn" ).click(function( event ) {
-	$.getJSON( "api.php/recruiter_domains/get_all_as_json", function( data ) {
-		/*var items = [];
-		$.each( data, function( key, val ) {
-			//items.push( "<li id='" + key + "'>" + val + "</li>" );
-			items.push( val.domain );
-		});*/
-		$( '#dialog' ).dialog('option', 'title', 'List in JSON format');
-		$( "#dialog" ).text(JSON.stringify(data, ''));
-		$( "#dialog" ).dialog( "open" );
-	});
-	event.preventDefault();
-	/*$.fileDownload('', {
-		successCallback: function (url) {
-			alert('You just got a file download dialog or ribbon for this URL :' + url);
-		},
-		failCallback: function (html, url) {
-			alert('Your file download just failed for this URL:' + url + '\r\n' +
-					'Here was the resulting error HTML: \r\n' + html
-					);
-		}
-	});
-	event.preventDefault();*/
-});
-
-$( "#dev_domain_fld" ).autocomplete({
-	source: recruiterDomains
-}).keypress(function (e) {
-	if (e.which == 13) {
-		var domainStr = $( "#dev_domain_fld" ).val();
-		handleDomainCheck(domainStr);
-		return false;
-	}
-});
-
-
-$( "#devsCheckIfInListBtn" ).button();
-$( "#devsCheckIfInListBtn" ).click(function( event ) {
-	var domainStr = $( "#dev_domain_fld" ).val();
-	if (domainStr.startsWith("ex:") == true) {
-		domainStr = domainStr.substr(3, domainStr.length-3).trim();
-	}
-	$.post( "api.php/recruiter_domains/is_in_list",
-			{ domain: domainStr },
-			function( data ) {
-				$( '#dialog' ).dialog('option', 'title', 'Result');
-				if (data.success === true) {
-					$( "#dialog" ).text("The recruiter's domain is in the list!");
-				} else {
-					$( "#dialog" ).text("The recruiter's domain is *NOT* in the list!");
-				}
-				$( "#dialog" ).dialog( "open" );
-			},
-			"json"
-	);
-});
-
-
-$( "#getListAsJsonBtn" ).button();
-$( "#getListAsJsonBtn" ).click(function( event ) {
-	$.get( "api.php/recruiter_domains/get_all", function( data ) {
-		$( '#dialog' ).dialog('option', 'title', 'List in JSON format');
-		$( "#dialog" ).text(data);
-		$( "#dialog" ).dialog( "open" );
-		event.preventDefault();
-	});
-});
-
-<!-- user_domain_fld -->
-$( "#user_domain_fld" ).ready(function() {
-	$( "#user_domain_fld" ).css("color", "gray");
-	$( "#user_domain_fld" ).val("ex: oxfordcorp.com");
-});
-
-$( "#user_domain_fld" ).focus(function() {
-	var domainStr = $( "#user_domain_fld" ).val();
-	if (domainStr.startsWith("ex:") == true) {
-		$( "#user_domain_fld" ).val("");
-		$( "#user_domain_fld" ).css("color", "black");
-	}
-});
-
-<!-- user_new_domain_fld -->
-$( "#user_new_domain_fld" ).ready(function() {
-	$( "#user_new_domain_fld" ).css("color", "gray");
-	$( "#user_new_domain_fld" ).val("ex: www.oxfordcorp.com");
-});
-
-$( "#user_new_domain_fld" ).focus(function() {
-	var domainStr = $( "#user_new_domain_fld" ).val();
-	if (domainStr.startsWith("ex:") == true) {
-		$( "#user_new_domain_fld" ).val("");
-		$( "#user_new_domain_fld" ).css("color", "black");
-	}
-});
-
-$( "#dev_domain_fld" ).ready(function() {
-	$( "#dev_domain_fld" ).css("color", "gray");
-	$( "#dev_domain_fld" ).val("ex: oxfordcorp.com");
-});
-
-$( "#dev_domain_fld" ).focus(function() {
-	var domainStr = $( "#dev_domain_fld" ).val();
-	if (domainStr.startsWith("ex:") == true) {
-		$( "#dev_domain_fld" ).val("");
-		$( "#dev_domain_fld" ).css("color", "black");
-	}
-});
-
-
-$( "#button" ).button();
-$( "#button-icon" ).button({
-	icon: "ui-icon-gear",
-	showLabel: false
-});
-
-
-$( "#dialog" ).dialog({
-	autoOpen: false,
-	width: 400,
-	buttons: [
-		{
-			text: "Ok",
-			click: function() {
-				$( this ).dialog( "close" );
-			}
-		},
-		{
-			text: "Cancel",
-			click: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	]
-});
-
-
-
-
-</script>
-
-<!-- reCaptcha onLoad script -->
-<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
-
-</body>
+      $( "#usersGetListAsXmlBtn" ).button();
+      $( "#usersGetListAsXmlBtn" ).click(function( event ) {
+        $.fileDownload('api.php/recruiter_domains/get_all_as_xml', {
+          successCallback: function (url) {
+            alert('You just got a file download dialog or ribbon for this URL :' + url);
+          },
+          failCallback: function (html, url) {
+            alert('Your file download just failed for this URL:' + url + '\r\n' +
+                'Here was the resulting error HTML: \r\n' + html
+                );
+          }
+        });
+        event.preventDefault();
+      });
+    </script>
+    
+    <!-- Country and State selectors -->
+    <script>
+      $( "#state" ).prop("disabled", true).addClass("ui-state-disabled");
+      
+      $( "#country" )
+          .find('option')
+          .empty()
+          .append($('<option>', {
+            value: 'Choose...',
+            text: 'Choose...'
+          }));
+      
+      $.getJSON( "api.php/countries/get_all_by_name", function( data ) {
+        $.each( data, function( key, val ) {
+          // Update the countries.
+          $('#country').append($('<option>', {
+            value: val.code,
+            text: val.name
+          }));
+        });
+      });
+      
+      $( "#country" ).change(function () {
+        if ($( "#country" ).val() != "") {
+          // Reset the state selector.
+          $( "#state" ).prop("disabled", true).addClass("ui-state-disabled");
+          $( "#state" ).find('option').remove().empty()
+        
+          $.post( "api.php/states/get_all_by_name",
+              { country_code: $( "#country" ).val() },
+              function( data ) {
+                if (data.error == undefined) {
+                  // Update the states.
+                  $.each( data, function( key, val ) {
+                    $('#state').append($('<option>', {
+                      value: val.code,
+                      text: val.name
+                    }));
+                  });
+                  $( "#state" ).prop("disabled", false).removeClass("ui-state-disabled");
+                } else {
+                  //$( "#state" ).prop("disabled", true).addClass("ui-state-disabled");
+                  alert("Error: " + data.text)
+                }
+              },
+              "json"
+          );
+        } else {
+          $( "#state" ).prop("disabled", true).addClass("ui-state-disabled");
+        }
+      });
+    </script>
+    
+    <!-- reCaptcha onLoad script -->
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+    
+  </body>
 </html>

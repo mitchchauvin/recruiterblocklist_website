@@ -112,7 +112,7 @@ $app->post('/recruiter_domains/add', function(Request $request, Response $respon
         $db = new recruiter_block_list_db();
         $db = $db->connect();
 		
-		$stmt = $db->prepare($sqlQuery);
+        $stmt = $db->prepare($sqlQuery);
         $stmt->bindParam(':domain', $hostName);
         $stmt->execute();
 		
@@ -200,7 +200,7 @@ $app->get('/recruiter_domains/get_all_as_text', function(Request $request, Respo
 		
 		header('Content-type: application/text');
 		header('Content-Disposition: attachment; filename="recruiterBlockList.txt"');
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			echo $row['domain']."\r\n";
 		}
 		$db = null;

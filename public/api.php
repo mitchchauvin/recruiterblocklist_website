@@ -10,6 +10,8 @@ require '../src/config/recruiter_block_list_db.php';
 
 include '../src/routes/recruiter_domains.php';
 include '../src/routes/recruiters.php';
+include '../src/routes/countries.php';
+include '../src/routes/states.php';
 
 $app->run();
 ?>

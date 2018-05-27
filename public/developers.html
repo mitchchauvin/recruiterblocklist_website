@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <link rel="icon" href="favicon.ico">
+
+    <title>Recruiter Block List</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="external/bootstrap-4.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="carousel.css" rel="stylesheet">
+    
+  </head>
+  <body>
+
+    <header>
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="index.html">Recruiter Block List</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.html#lists">Lists</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.html#apps">Apps</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.html#contribute">Contribute</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Developers <span class="sr-only">(current)</span></a>
+            </li>
+          </ul>
+          <!--
+          <form class="form-inline mt-2 mt-md-0">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Sign in</button>
+			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Create Account</button>
+          </form>
+          -->
+        </div>
+      </nav>
+    </header>
+
+    <main role="main">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <div class="container">
+          <h1 class="display-3">Welcome developers!</h1>
+          <p>Use our API in your software or mobile app. Our API is easy to use and open-source (GPL). Our database of recruiters is community supported to stay ahead of the ever changing recruiter landscape!</p>
+          
+          <p>Our API is so simple, we bet can learn it in 5 minutes! Scroll down to get started!</p>
+          
+          <p>You can also contribute to our open source website <a href="https://github.com/mitchchauvin/recruiterblocklist_website">here</a>!</p>
+          <!-- <p><a class="btn btn-primary btn-lg" role="button" href="#">Learn more »</a></p> -->
+        </div>
+      </div>
+
+      <div class="container">
+      
+        <div class="row">
+          <div class="col-md-100">
+            <h2>Get a list of recruiter domains in JSON format</h2>
+            <p>Get the complete list of recruiter domain names in JSON format.</p>
+            
+            <table style="width:100%">
+              <tr>
+                <th>Method:</th><td>GET</td>
+              </tr>
+              <tr>
+                <th>URL:</th><td>http://www.recruiterblocklist/api.php/recruiter_domains/get_all_as_json</td>
+              </tr>
+              <tr>
+                <th>Response:</th><td>JSON encoded data. Ex. {"domain":"example1.com", ...}</td>
+              </tr>
+            </table>
+            <!-- <p><a class="btn btn-secondary" role="button" href="#">View details »</a></p> -->
+          </div>
+        </div>
+        
+        <br><hr><br>
+        
+        <div class="row">
+          <div class="col-md-100">
+            <h2>Get a list of recruiter domains in TEXT format</h2>
+            <p>Get the complete list of recruiter domain names in TEXT format. The list is composed of one domain per line.</p>
+            
+            <table style="width:100%">
+              <tr>
+                <th>Method:</th><td>GET</td>
+              </tr>
+              <tr>
+                <th>URL:</th><td>http://www.recruiterblocklist/api.php/recruiter_domains/get_all_as_text</td>
+              </tr>
+              <tr>
+                <th>Response:</th><td>List of recruiter domains, one domain per line, in text format.</td>
+              </tr>
+            </table>
+            <!-- <p><a class="btn btn-secondary" role="button" href="#">View details »</a></p> -->
+          </div>
+        </div>
+        
+        <br><hr><br>
+        
+        <div class="row">
+          <div class="col-md-100">
+            <h2>Get a list of recruiter domains in CSV format</h2>
+            <p>Get the complete list of recruiter domain names in CSV format. The list is composed of one domain per line.</p>
+            
+            <table style="width:100%">
+              <tr>
+                <th>Method:</th><td>GET</td>
+              </tr>
+              <tr>
+                <th>URL:</th><td>http://www.recruiterblocklist/api.php/recruiter_domains/get_all_as_text</td>
+              </tr>
+              <tr>
+                <th>Response:</th><td>List of recruiter domains, one domain per line, in CSV format.</td>
+              </tr>
+            </table>
+            <br>
+            <!-- <p><a class="btn btn-secondary" role="button" href="#">View details »</a></p> -->
+          </div>
+        </div>
+
+        <br><hr><br>
+        
+        <div class="row">
+          <div class="col-md-100">
+            <h2>Get a list of recruiter domains in XML format</h2>
+            <p>Get the complete list of recruiter domain names in Gmail mail filter XML format. This format can be imported directly into Gmail using the mail filter tool to block unwanted recruiter mail!</p>
+            
+            <table style="width:100%">
+              <tr>
+                <th>Method:</th><td>GET</td>
+              </tr>
+              <tr>
+                <th>URL:</th><td>http://www.recruiterblocklist/api.php/recruiter_domains/get_all_as_xml</td>
+              </tr>
+              <tr>
+                <th>Response:</th><td>Gmail mail filter format (XML).</td>
+              </tr>
+            </table>
+            <br>
+            <!-- <p><a class="btn btn-secondary" role="button" href="#">View details »</a></p> -->
+          </div>
+        </div>
+
+        <br><hr><br>
+        
+        <div class="row">
+          <div class="col-md-100">
+            <h2>Check if a recruiting company's domain is on the block list</h2>
+            <p></p>
+            
+            <table style="width:100%">
+              <tr>
+                <th>Method:</th><td>POST</td>
+              </tr>
+              <tr>
+                <th>URL:</th><td>http://www.recruiterblocklist/api.php/recruiter_domains/is_in_list</td>
+              </tr>
+              <tr>
+                <th>Arguments:</th><td><i>domain</i> as string.</td>
+              </tr>
+              <tr>
+                <th>Response:</th><td>JSON: {"success":[true,false]}.</td>
+              </tr>
+            </table>
+            <br>
+            <!-- <p><a class="btn btn-secondary" role="button" href="#">View details »</a></p> -->
+          </div>
+        </div>
+
+        <br><hr><br>
+        
+        <div class="row">
+          <div class="col-md-100">
+            <h2>Get a complete list of recruiters in JSON format</h2>
+            <p></p>
+            
+            <table style="width:100%">
+              <tr>
+                <th>Method:</th><td>GET</td>
+              </tr>
+              <tr>
+                <th>URL:</th><td>http://www.recruiterblocklist/api.php/recruiters/get_all_as_json</td>
+              </tr>
+              <tr>
+                <th>Response:</th><td>JSON: {"success":[true,false], "result": Object containing all recruiter info}.</td>
+              </tr>
+            </table>
+            <br>
+            <!-- <p><a class="btn btn-secondary" role="button" href="#">View details »</a></p> -->
+          </div>
+        </div>
+        
+        <br><hr><br>
+        
+      </div> <!-- /container -->
+
+    </main>
+
+      <!-- FOOTER -->
+      <footer class="container">
+        <p class="float-right"><a href="#">Back to top</a></p>
+        <p>&copy; 2018 Recruiter Block List Project <!-- &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p> -->
+      </footer>
+    </main>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="external/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    
+    <script>window.jQuery || document.write('<script src="external/bootstrap-4.1.1/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="external/bootstrap-4.1.1/assets/js/vendor/popper.min.js"></script>
+    <script src="external/bootstrap-4.1.1/dist/js/bootstrap.min.js"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="external/bootstrap-4.1.1/assets/js/vendor/holder.min.js"></script>
+   
+    
+  </body>
+</html>
