@@ -577,7 +577,7 @@
           $( "#state" ).find('option').remove().empty()
         
           $.post( "api.php/states/get_all_by_name",
-              { country_code: $( "#country" ).val() },
+              { countryCode: $( "#country" ).val() },
               function( data ) {
                 if (data.error == undefined) {
                   // Update the states.

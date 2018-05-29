@@ -6,8 +6,8 @@ require_once "../config/db_config.php";
 
 // Get all states (as JSON)
 $app->post('/states/get_all_by_name', function(Request $request, Response $response) {
-    $countryCode = htmlspecialchars($request->getParam('country_code'));
-    $sql = "SELECT name,code FROM states WHERE country_code = :country_code ORDER BY name";
+    $countryCode = strtoupper(htmlspecialchars($request->getParam('countryCode')));
+    $sql = "SELECT name,code FROM states WHERE countryCode = :countryCode ORDER BY name";
 
     try {
         // Get the database object.
@@ -17,7 +17,7 @@ $app->post('/states/get_all_by_name', function(Request $request, Response $respo
         $db = $db->connect();
 
         $stmt = $db->prepare($sql);
-        $stmt->execute(array(":country_code" => $countryCode));
+        $stmt->execute(array(":countryCode" => $countryCode));
         $all_states = $stmt->fetchAll(PDO::FETCH_OBJ);
         
         header('Content-type: application/json');

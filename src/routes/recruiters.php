@@ -240,8 +240,8 @@ $app->post('/recruiters/add', function(Request $request, Response $response) {
   
 	$address = trim(htmlspecialchars($request->getParam('address')));
 	$city = trim(htmlspecialchars($request->getParam('city')));
-	$stateCode = trim(htmlspecialchars($request->getParam('stateCode')));
-	$countryCode = trim(htmlspecialchars($request->getParam('countryCode')));
+	$stateCode = strtoupper(trim(htmlspecialchars($request->getParam('stateCode'))));
+	$countryCode = strtoupper(trim(htmlspecialchars($request->getParam('countryCode'))));
 	$zip = trim(htmlspecialchars($request->getParam('zip')));
   
   // Inputs for debugging.
