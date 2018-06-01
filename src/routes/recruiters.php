@@ -412,121 +412,144 @@ $app->get('/recruiters/get_all_as_json', function(Request $request, Response $re
 
         // Connect to the database.
         $db = $db->connect();
-
         $stmt = $db->prepare($sqlGetAllRecruiters);
-        //$stmt->bindParam(':email', $emailStr);
         $stmt->execute();
-        $all_recruiters = $stmt->fetchAll(PDO::FETCH_OBJ);
-        $db = null;
+        
+        // Turn on output buffering with the gzhandler.
+        ob_start('ob_gzhandler');
         
         header('Content-type: application/json');
-        $response = array(
-            "success" => true,
-            "result" => $all_recruiters
-        );
-        echo json_encode($response);
+        echo '[';
+        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          // First entry. No comma.
+          echo json_encode($row);
+          
+          // Subsequent entries, prefix with comma.
+          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            echo "," . json_encode($row);
+          }
+        }
+        echo ']';
+        
+        $db = null;
     } catch (PDOException $e) {
         sendResponseJson(false, "Error: " . $e->getMessage(), null);
         exit;
     } 
 });
 
-/*
+
 // Get all recruiter domains (as TEXT)
 $app->get('/recruiters/get_all_as_text', function(Request $request, Response $response) {
-    $sql = "SELECT domain FROM recruiter_domains";
+    $sql = "SELECT * FROM recruiters";
 
     try {
         // Get the database object.
-        $db = new recruiter_domains_db();
-
-        // Connect to the database.
+        $db = new recruiter_block_list_db();
         $db = $db->connect();
-        $stmt = $db->query($sql);
-		
-		header('Content-type: application/text');
-		header('Content-Disposition: attachment; filename="recruiterBlockList.txt"');
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        
+        // Turn on output buffering with the gzhandler.
+        ob_start('ob_gzhandler');
+        
+        header('Content-type: application/text');
+        header('Content-Disposition: attachment; filename="recruiterBlockList.txt"');
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-			echo $row['domain']."\r\n";
-		}
-		$db = null;
+            foreach ($row as $key => $value) {
+                echo $key."=".$value.",";
+            }
+            echo "\r\n";
+        }
+        $db = null;
     } catch (PDOException $e) {
-        echo '{"error": {"text": '.$e->getMessage().'}';
+        sendResponseJson(false, "Error: " . $e->getMessage(), null);
+        exit;
     }
 });
 
+
 // Get all recruiter domains (as CSV)
-$app->get('/recruiter_domains/get_all_as_csv', function(Request $request, Response $response) {
-    $sql = "SELECT domain FROM recruiter_domains";
+$app->get('/recruiters/get_all_as_csv', function(Request $request, Response $response) {
+    $sql = "SELECT * FROM recruiters";
 
     try {
         // Get the database object.
-        $db = new recruiter_domains_db();
-
-        // Connect to the database.
+        $db = new recruiter_block_list_db();
         $db = $db->connect();
-        $stmt = $db->query($sql);
-		
-		header('Content-type: application/text');
-		header('Content-Disposition: attachment; filename="recruiterBlockList.csv"');
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        
+        // Turn on output buffering with the gzhandler.
+        ob_start('ob_gzhandler');
+        
+        header('Content-type: application/csv');
+        header('Content-Disposition: attachment; filename="recruiterBlockList.csv"');
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-			echo $row['domain'].",\r\n";
-		}
-		$db = null;
+            foreach ($row as $key => $value) {
+                echo "\"" . $value . "\",";
+            }
+            echo "\r\n";
+        }
+        $db = null;
     } catch (PDOException $e) {
-        echo '{"error": {"text": '.$e->getMessage().'}';
+        sendResponseJson(false, "Error: " . $e->getMessage(), null);
+        exit;
     }
 });
 
 // Get all recruiter domains (as Gmail XML Mail Filter)
-$app->get('/recruiter_domains/get_all_as_xml', function(Request $request, Response $response) {
-    $sql = "SELECT * FROM recruiter_domains";
+$app->get('/recruiters/get_all_as_xml', function(Request $request, Response $response) {
+    $sql = "SELECT * FROM recruiters";
 
     try {
         // Get the database object.
-        $db = new recruiter_domains_db();
-
-        // Connect to the database.
+        $db = new recruiter_block_list_db();
         $db = $db->connect();
-        $stmt = $db->query($sql);
-		
-		header('Content-type: application/xml');
-		header('Content-Disposition: attachment; filename="recruiterBlockListGmailMailFilter.xml"');
-		
-		echo "<?xml version='1.0' encoding='UTF-8'?><feed xmlns='http://www.w3.org/2005/Atom' xmlns:apps='http://schemas.google.com/apps/2006'>\r\n";
-		echo "\t<title>Mail Filters</title>\r\n";
-		
-		// Date
-		$dateTimeStr = "<updated>".date('Y-m-d')."T".date('G:i:s')."Z</updated>";
-		echo "\t".$dateTimeStr."\r\n";
-		
-		echo "\t<author>\r\n";
-		echo "\t\t<name>Recruiter Blocker</name>\r\n";
-		echo "\t\t<email>support@recruiterblocker.com</email>\r\n";
-		echo "\t</author>\r\n";
-		
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        
+        // Turn on output buffering with the gzhandler.
+        ob_start('ob_gzhandler');
+        
+        header('Content-type: application/xml');
+        header('Content-Disposition: attachment; filename="recruiterBlockListGmailMailFilter.xml"');
+        
+        echo "<?xml version='1.0' encoding='UTF-8'?><feed xmlns='http://www.w3.org/2005/Atom' xmlns:apps='http://schemas.google.com/apps/2006'>\r\n";
+        echo "\t<title>Mail Filters</title>\r\n";
+        
+        // Date
+        $dateTimeStr = "<updated>".date('Y-m-d')."T".date('G:i:s')."Z</updated>";
+        echo "\t".$dateTimeStr."\r\n";
+        
+        echo "\t<author>\r\n";
+        echo "\t\t<name>Recruiter Blocker</name>\r\n";
+        echo "\t\t<email>support@recruiterblocker.com</email>\r\n";
+        echo "\t</author>\r\n";
+        
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-			echo "\t<entry>\r\n";
-			echo "\t\t<category term='filter'></category>\r\n";
-			echo "\t\t<title>Mail Filter</title>\r\n";
-			echo "\t\t<id>tag:mail.google.com,2008:filter:".$row['id']."</id>\r\n";
-			echo "\t\t".$dateTimeStr."\r\n";
-			echo "\t\t<content></content>\r\n";
-			echo "\t\t<apps:property name='from' value='@".$row['domain']."'/>\r\n";
-			echo "\t\t<apps:property name='shouldTrash' value='true'/>\r\n";
-			echo "\t\t<apps:property name='sizeOperator' value='s_sl'/>\r\n";
-			echo "\t\t<apps:property name='sizeUnit' value='s_smb'/>\r\n";
-			echo "\t</entry>\r\n";
-		}
-		echo "</feed>";
-		$db = null;
+            echo "\t<entry>\r\n";
+            echo "\t\t<category term='filter'></category>\r\n";
+            echo "\t\t<title>Mail Filter</title>\r\n";
+            echo "\t\t<id>tag:mail.google.com,2008:filter:".$row['id']."</id>\r\n";
+            echo "\t\t".$dateTimeStr."\r\n";
+            echo "\t\t<content></content>\r\n";
+            echo "\t\t<apps:property name='from' value='".$row['email']."'/>\r\n";
+            echo "\t\t<apps:property name='shouldTrash' value='true'/>\r\n";
+            echo "\t\t<apps:property name='sizeOperator' value='s_sl'/>\r\n";
+            echo "\t\t<apps:property name='sizeUnit' value='s_smb'/>\r\n";
+            echo "\t</entry>\r\n";
+        }
+        echo "</feed>";
+        $db = null;
     } catch (PDOException $e) {
-        echo '{"error": {"text": '.$e->getMessage().'}';
+        sendResponseJson(false, "Error: " . $e->getMessage(), null);
     }
 });
 
+/*
 // Get by ID
-$app->post('/recruiter_domains/get_by_id', function(Request $request, Response $response) {
+$app->post('/recruiters/get_by_id', function(Request $request, Response $response) {
 	$id = $request->getParam('id');
 	
 	$id = trim($id);

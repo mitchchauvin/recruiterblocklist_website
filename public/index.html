@@ -177,10 +177,22 @@
           <div class="col-md-100" name="lists">
             <h2 class="featurette-heading">Download the recruiter block list!</h2>
             <p class="lead">Download the recruiter block list in text, CSV or Gmail XML mail filter format. Then import the block list into your email client spam filter.</p>
+            
+            <p>We recommend that you download the domain-only list so that you block entire recruiter domains. Blocking a recruiter's domain ensures you won't receive mail from anyone else in the recruiting company. Often recruiter or recruiting companies will send you messages from multiple email address in order to get through your spam filters. Blocking a domain ensures you wont get disrupted by blocking all email from the recruiting company. Try it out now!</p>
 			<p class="lead">
-			<a class="btn btn-lg btn-primary" id="usersGetListAsTextBtn" href="#lists" role="button">Text</a>
-			<a class="btn btn-lg btn-primary" id="usersGetListAsCsvBtn" href="#lists" role="button">CSV</a>
-			<a class="btn btn-lg btn-primary" id="usersGetListAsXmlBtn" href="#lists" role="button">XML (Gmail mail filter format)</a>
+      
+      <h3>Recruiter block list</h3>
+      <a class="btn btn-lg btn-primary" id="usersGetRecruiterListAsTextBtn" href="#lists" role="button">Text</a>
+			<a class="btn btn-lg btn-primary" id="usersGetRecruiterListAsCsvBtn" href="#lists" role="button">CSV</a>
+			<a class="btn btn-lg btn-primary" id="usersGetRecruiterListAsXmlBtn" href="#lists" role="button">XML (Gmail mail filter format)</a>
+      <br>
+      <br>
+      
+      <h3>Recruiter domain block list</h2>
+			<a class="btn btn-lg btn-primary" id="usersGetDomainListAsTextBtn" href="#lists" role="button">Text</a>
+			<a class="btn btn-lg btn-primary" id="usersGetDomainListAsCsvBtn" href="#lists" role="button">CSV</a>
+			<a class="btn btn-lg btn-primary" id="usersGetDomainListAsXmlBtn" href="#lists" role="button">XML (Gmail mail filter format)</a>
+      
 			</p>
           </div>
         </div>
@@ -502,9 +514,9 @@
       });
     </script>
     
-    <!-- User download buttons -->
+    <!-- Users: Recruiter domains download buttons -->
     <script>
-      $( "#usersGetListAsTextBtn" ).click(function( event ) {
+      $( "#usersGetDomainListAsTextBtn" ).click(function( event ) {
         $.fileDownload('api.php/recruiter_domains/get_all_as_text', {
           successCallback: function (url) {
             alert('You just got a file download dialog or ribbon for this URL :' + url);
@@ -517,8 +529,8 @@
         });
       });
 
-      $( "#usersGetListAsCsvBtn" ).button();
-      $( "#usersGetListAsCsvBtn" ).click(function( event ) {
+      $( "#usersGetDomainListAsCsvBtn" ).button();
+      $( "#usersGetDomainListAsCsvBtn" ).click(function( event ) {
         $.fileDownload('api.php/recruiter_domains/get_all_as_csv', {
           successCallback: function (url) {
             alert('You just got a file download dialog or ribbon for this URL :' + url);
@@ -532,9 +544,55 @@
         event.preventDefault();
       });
 
-      $( "#usersGetListAsXmlBtn" ).button();
-      $( "#usersGetListAsXmlBtn" ).click(function( event ) {
+      $( "#usersGetDomainListAsXmlBtn" ).button();
+      $( "#usersGetDomainListAsXmlBtn" ).click(function( event ) {
         $.fileDownload('api.php/recruiter_domains/get_all_as_xml', {
+          successCallback: function (url) {
+            alert('You just got a file download dialog or ribbon for this URL :' + url);
+          },
+          failCallback: function (html, url) {
+            alert('Your file download just failed for this URL:' + url + '\r\n' +
+                'Here was the resulting error HTML: \r\n' + html
+                );
+          }
+        });
+        event.preventDefault();
+      });
+    </script>
+    
+    <!-- Users: Recruiter download buttons -->
+    <script>
+      $( "#usersGetRecruiterListAsTextBtn" ).click(function( event ) {
+        $.fileDownload('api.php/recruiters/get_all_as_text', {
+          successCallback: function (url) {
+            alert('You just got a file download dialog or ribbon for this URL :' + url);
+          },
+          failCallback: function (html, url) {
+            alert('Your file download just failed for this URL:' + url + '\r\n' +
+                'Here was the resulting error HTML: \r\n' + html
+                );
+          }
+        });
+      });
+
+      $( "#usersGetRecruiterListAsCsvBtn" ).button();
+      $( "#usersGetRecruiterListAsCsvBtn" ).click(function( event ) {
+        $.fileDownload('api.php/recruiters/get_all_as_csv', {
+          successCallback: function (url) {
+            alert('You just got a file download dialog or ribbon for this URL :' + url);
+          },
+          failCallback: function (html, url) {
+            alert('Your file download just failed for this URL:' + url + '\r\n' +
+                'Here was the resulting error HTML: \r\n' + html
+                );
+          }
+        });
+        event.preventDefault();
+      });
+
+      $( "#usersGetRecruiterListAsXmlBtn" ).button();
+      $( "#usersGetRecruiterListAsXmlBtn" ).click(function( event ) {
+        $.fileDownload('api.php/recruiters/get_all_as_xml', {
           successCallback: function (url) {
             alert('You just got a file download dialog or ribbon for this URL :' + url);
           },

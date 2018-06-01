@@ -199,7 +199,7 @@ $app->get('/recruiter_domains/get_all_as_text', function(Request $request, Respo
         $stmt = $db->query($sql);
 		
 		header('Content-type: application/text');
-		header('Content-Disposition: attachment; filename="recruiterBlockList.txt"');
+		header('Content-Disposition: attachment; filename="recruiterDomainsBlockList.txt"');
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			echo $row['domain']."\r\n";
 		}
